@@ -1,21 +1,115 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+<div class="container ">
+  <div class="container-fluid">
+    <h1>Tamplate Driven Form (TDF)</h1>
+    <hr>
+
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{errorMessage}}
+    </div>
+
+    <form #userForm="ngForm"
+          *ngIf="!submitted"
+          (ngSubmit)="onSubmit()"
+          novalidate>
+      {{userForm.form.valid}}
+      <!-- {{userForm.value | json}} -->
+    <hr>
+
+      <!-- {{userModel | json}} -->
+      
+      <div class="form-froup">
+        <label for="">Name</label>
+        <input type="text" #name="ngModel" required [class.is-invalid]="name.invalid && name.touched" class="form-control" name="userName" [(ngModel)]="userModel.name">
+      </div>
+      <small class="text-danger" [class.d-none]="name.valid || name.untouched">Name is required</small>
+      <!-- {{name.value}}
+      {{name.untouched}} {{name.dirty}} -->
+
+      <div class="form-froup">
+        <label for="">Email</label>
+        <input type="email" text="" class="form-control" name="userEmail" [(ngModel)]="userModel.email">
+      </div>
+
+      <div class="form-froup">
+        <label for="">Phone</label>
+          <input type="tel" required #phone="ngModel" pattern="^\d{10}$" [class.is-invalid]="phone.invalid && phone.touched" class="form-control" name="userPhone" [(ngModel)]="userModel.phone">
+      </div>
+      <!-- <small class="text-danger" [class.d-none]="phone.valid || phone.untouched">
+        Phone number is required and must be 10 digits. Now You have entered {{phone.value.length}}
+      </small> --> 
+      <div *ngIf="phone.errors && (phone.invalid || phone.touched)" >
+        <small class="text-danger" *ngIf="phone.errors.required">Phone number is required</small>
+        <small class="text-danger" *ngIf="phone.errors.pattern">
+          Phone number must be 10 digits. Now You have entered {{phone.value.length}}
+        </small>
+      </div>
+
+      <hr>
+
+      <div class="form-group">
+        <select #topic="ngModel"
+                (blur)="validateTopic(topic.value)"
+                (change)="validateTopic(topic.value)"
+                [class.is-invalid]="topicHasError && topic.touched" 
+                class="custom-select" name="userTecnology" [(ngModel)]="userModel.topic">
+          <option value="default">
+            I am interested in:
+          </option>
+          <option *ngFor="let topic of topics"> {{topic}} </option>
+        </select>
+        <small class="text-danger"
+               [class.d-none]="!topicHasError || topic.untouched">
+          Please, choose the topic!
+        </small>
+      </div>
+
+      <div class="mb-3">
+        <label for="">Time preference</label>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="timePreference" value="morning" [(ngModel)]="userModel.timePreference">
+          <label for="" class="form-check-label">Morning (9AM - 12PM)</label>
+        </div>
+
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="timePreference" value="evening" [(ngModel)]="userModel.timePreference">
+          <label for="" class="form-check-label">Evening (5PM - 8PM)</label>
+        </div>  
+      </div>
+
+      <div class="form-check mb-3">
+        <input type="checkbox" class="form-check-input" name="userSubscribe" [(ngModel)]="userModel.subscribe">
+        <label for="" class="form-check-label">
+          Send me promotional offers
+        </label>
+      </div>
+
+      <!-- <div ngModelGroup="adress">
+        <div class="form-group">
+          <label for="">City</label>
+          <input type="text" class="form-control" name="city" ngModel>
+        </div>
+
+        <div class="form-group">
+          <label for="">Street</label>
+          <input type="text" class="form-control" name="street" ngModel>
+        </div>
+
+        <div class="form-group">
+          <label for="">Postal Code</label>
+          <input type="number" class="form-control" name="postalCode" ngModel>
+        </div>
+      </div> -->
+
+      <button type="submit" [disabled]="userForm.form.invalid || topicHasError" class="btn btn-primary">
+        Submit form
+      </button>
+
+    </form>
+
+
+
+  </div>
+  
 </div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
 
 <router-outlet></router-outlet>
